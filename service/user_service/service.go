@@ -7,4 +7,5 @@ import (
 
 type UserService interface {
 	CreateNewUser(payload *dto.NewUserRequest) (*dto.NewUserResponse, errs.MessageErr)
+	UserLogin(payload *dto.LoginRequest) (*dto.LoginResponse, errs.MessageErr)
 }

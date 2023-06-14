@@ -34,3 +34,22 @@ func (u *userHandler) CreateNewUser(ctx *gin.Context) {
 
 	ctx.JSON(result.Status, result)
 }
+
+func (u *userHandler) UserLogin(ctx *gin.Context) {
+	var loginUser dto.LoginRequest
+
+	if err := ctx.ShouldBindJSON(&loginUser); err != nil {
+		errBindJson := errs.NewUnproccesibleEntity("Error occurred because request body is invalid")
+		ctx.JSON(errBindJson.Status(), errBindJson)
+		return
+	}
+
+	result, err := u.userService.UserLogin(&loginUser)
+	if err != nil {
+		errBindJson := errs.NewBadRequest("Error occurred because request body is invalid")
+		ctx.JSON(errBindJson.Status(), errBindJson)
+		return
+	}
+
+	ctx.JSON(result.Status, result)
+}

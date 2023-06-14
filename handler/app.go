@@ -21,6 +21,7 @@ func StartApp() {
 	userRoute := r.Group("/users")
 	{
 		userRoute.POST("/register", userHandler.CreateNewUser)
+		userRoute.POST("/login", userHandler.UserLogin)
 	}
 
 	r.Run(":8080")

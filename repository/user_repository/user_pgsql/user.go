@@ -22,3 +22,12 @@ func (u *userPg) CreateNewUser(userPayload *entity.User) errs.MessageErr {
 
 	return nil
 }
+
+func (u *userPg) GetUserByEmail(userEmail string) (*entity.User, errs.MessageErr) {
+	var user entity.User
+	if err := u.db.Where("email = ?", userEmail).First(&user).Error; err != nil {
+		return nil, errs.NewNotFound("Error occurred while trying to find email")
+	}
+
+	return &user, nil
+}

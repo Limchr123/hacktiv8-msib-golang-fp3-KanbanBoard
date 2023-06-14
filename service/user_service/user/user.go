@@ -50,3 +50,27 @@ func (u *userService) CreateNewUser(payload *dto.NewUserRequest) (*dto.NewUserRe
 
 	return response, nil
 }
+
+func (u *userService) UserLogin(payload *dto.LoginRequest) (*dto.LoginResponse, errs.MessageErr) {
+	if err := helpers.ValidateStruct(payload); err != nil {
+		return nil, errs.NewUnproccesibleEntity("Error occurred while trying to validate struct")
+	}
+
+	user, err := u.userRepo.GetUserByEmail(payload.Email)
+	if err != nil {
+		return nil, errs.NewNotFound("Error occurred because email is invalid")
+	}
+
+	userPassword := user.ComparePassword(payload.Password)
+	if !userPassword {
+		return nil, errs.NewNotFound("Error occurred because password is invalid")
+	}
+
+	token := user.GenerateToken()
+
+	response := &dto.LoginResponse{
+		Status: http.StatusOK,
+		Data:   dto.TokenResponse{Token: token},
+	}
+	return response, nil
+}
