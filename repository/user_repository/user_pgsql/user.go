@@ -23,6 +23,15 @@ func (u *userPg) CreateNewUser(userPayload *entity.User) errs.MessageErr {
 	return nil
 }
 
+func (u *userPg) GetUserById(id uint) (*entity.User, errs.MessageErr) {
+	var user entity.User
+	if err := u.db.First(&user, id).Error; err != nil {
+		return nil, errs.NewInternalServerError("Error occurred while trying to find user")
+	}
+
+	return &user, nil
+}
+
 func (u *userPg) GetUserByEmail(userEmail string) (*entity.User, errs.MessageErr) {
 	var user entity.User
 	if err := u.db.Where("email = ?", userEmail).First(&user).Error; err != nil {
@@ -30,4 +39,17 @@ func (u *userPg) GetUserByEmail(userEmail string) (*entity.User, errs.MessageErr
 	}
 
 	return &user, nil
+}
+
+func (u *userPg) UpdateUserById(id uint, userPayload *entity.User) (*entity.User, errs.MessageErr) {
+	user, err := u.GetUserById(id)
+	if err != nil {
+		return nil, errs.NewInternalServerError("Error occurred while trying to find data")
+	}
+
+	if err := u.db.Model(user).Updates(userPayload).Error; err != nil {
+		return nil, errs.NewInternalServerError("Error occurred while trying to update data")
+	}
+
+	return user, nil
 }

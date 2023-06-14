@@ -18,10 +18,12 @@ func StartApp() {
 	//Route
 	r := gin.Default()
 
+	r.POST("/users/register", userHandler.CreateNewUser)
+	r.POST("/users/login", userHandler.UserLogin)
 	userRoute := r.Group("/users")
 	{
-		userRoute.POST("/register", userHandler.CreateNewUser)
-		userRoute.POST("/login", userHandler.UserLogin)
+		userRoute.Use(userService.UserAuthentication())
+		userRoute.POST("/update-account", userService.UserAuthorization(), userHandler.UpdateUserData)
 	}
 
 	r.Run(":8080")
