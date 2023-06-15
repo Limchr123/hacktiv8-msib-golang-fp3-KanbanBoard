@@ -27,3 +27,8 @@ type UpdateCategoryResponse struct {
 	Status int            `json:"status"`
 	Data   UpdateResponse `json:"data"`
 }
+
+type DeleteCategoryResponse struct {
+	Status  int    `json:"status"`
+	Message string `json:"message"`
+}

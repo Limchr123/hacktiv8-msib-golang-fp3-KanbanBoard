@@ -8,5 +8,7 @@ import (
 type CategoryRepository interface {
 	CreateNewCategory(categoryPayload *entity.Category) (*entity.Category, errs.MessageErr)
 	GetCategoryById(id uint) (*entity.Category, errs.MessageErr)
+	GetTaskByCategories(id uint) (*entity.Category, errs.MessageErr)
 	UpdateCategoryById(id uint, categoryPayload *entity.Category) (*entity.Category, errs.MessageErr)
+	DeleteCategoryById(id uint) errs.MessageErr
 }

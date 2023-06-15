@@ -45,3 +45,20 @@ func (c *categoryPg) UpdateCategoryById(id uint, categoryPayload *entity.Categor
 
 	return category, nil
 }
+
+func (c *categoryPg) DeleteCategoryById(id uint) errs.MessageErr {
+	category, err := c.GetCategoryById(id)
+	if err != nil {
+		return errs.NewInternalServerError("Error occurred while trying to find category")
+	}
+
+	if err := c.db.Delete(category).Error; err != nil {
+		return errs.NewInternalServerError("Error occurred while to delete data")
+	}
+
+	return nil
+}
+
+func (c *categoryPg) GetTaskByCategories(id uint) (*entity.Category, errs.MessageErr) {
+
+}

@@ -39,6 +39,7 @@ func StartApp() {
 		categoryRoute.Use(userService.UserAuthentication())
 		categoryRoute.POST("", userService.CategoryAuthorization(), categoryHandler.CreateNewCategory)
 		categoryRoute.PATCH("/:categoryId", userService.CategoryAuthorization(), categoryHandler.UpdateCategoryById)
+		categoryRoute.DELETE("/:categoryId", userService.CategoryAuthorization(), categoryHandler.DeleteCategoryById)
 	}
 
 	r.Run(":8080")

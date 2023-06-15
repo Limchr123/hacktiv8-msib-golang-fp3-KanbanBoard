@@ -69,3 +69,16 @@ func (c *categoryService) UpdateCategoryById(id uint, payload *dto.NewCategoryRe
 
 	return response, nil
 }
+
+func (c *categoryService) DeleteCategoryById(id uint) (*dto.DeleteCategoryResponse, errs.MessageErr) {
+	if err := c.categoryRepo.DeleteCategoryById(id); err != nil {
+		return nil, errs.NewInternalServerError("Error occurred while trying to delete data")
+	}
+
+	response := &dto.DeleteCategoryResponse{
+		Status:  http.StatusOK,
+		Message: "Category has been successfully deleted",
+	}
+
+	return response, nil
+}

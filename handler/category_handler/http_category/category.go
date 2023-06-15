@@ -53,12 +53,32 @@ func (c *categoryHandler) UpdateCategoryById(ctx *gin.Context) {
 		return
 	}
 
-	todo, err := c.categoryService.UpdateCategoryById(uint(categoryId), &updateCategory)
+	result, err := c.categoryService.UpdateCategoryById(uint(categoryId), &updateCategory)
 	if err != nil {
 		errBindJson := errs.NewBadRequest("Error occurred because request body is invalid")
 		ctx.JSON(errBindJson.Status(), errBindJson)
 		return
 	}
 
-	ctx.JSON(todo.Status, todo)
+	ctx.JSON(result.Status, result)
+}
+
+func (c *categoryHandler) DeleteCategoryById(ctx *gin.Context) {
+	id := ctx.Param("categoryId")
+
+	categoryId, err := strconv.Atoi(id)
+	if err != nil {
+		errBindJson := errs.NewBadRequest("Error occurred because id not found")
+		ctx.JSON(errBindJson.Status(), errBindJson)
+		return
+	}
+
+	result, err := c.categoryService.DeleteCategoryById(uint(categoryId))
+	if err != nil {
+		errBindJson := errs.NewBadRequest("Error occurred because request body is invalid")
+		ctx.JSON(errBindJson.Status(), errBindJson)
+		return
+	}
+
+	ctx.JSON(result.Status, result)
 }
