@@ -43,3 +43,29 @@ func (c *categoryService) CreateNewCategory(payload *dto.NewCategoryRequest) (*d
 
 	return response, nil
 }
+
+func (c *categoryService) UpdateCategoryById(id uint, payload *dto.NewCategoryRequest) (*dto.UpdateCategoryResponse, errs.MessageErr) {
+	if err := helpers.ValidateStruct(payload); err != nil {
+		return nil, errs.NewUnproccesibleEntity("Error occurred while trying to validate request")
+	}
+
+	category := entity.Category{
+		Type: payload.Type,
+	}
+
+	result, err := c.categoryRepo.UpdateCategoryById(id, &category)
+	if err != nil {
+		return nil, errs.NewInternalServerError("Error occurred while trying to create payload")
+	}
+
+	response := &dto.UpdateCategoryResponse{
+		Status: http.StatusOK,
+		Data: dto.UpdateResponse{
+			ID:        result.ID,
+			Type:      result.Type,
+			UpdatedAt: result.UpdatedAt,
+		},
+	}
+
+	return response, nil
+}

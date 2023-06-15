@@ -6,6 +6,7 @@ import (
 	"kanban_board/handler/category_handler"
 	"kanban_board/pkg/errs"
 	"kanban_board/service/category_service"
+	"strconv"
 )
 
 type categoryHandler struct {
@@ -33,4 +34,31 @@ func (c *categoryHandler) CreateNewCategory(ctx *gin.Context) {
 	}
 
 	ctx.JSON(result.Status, result)
+}
+
+func (c *categoryHandler) UpdateCategoryById(ctx *gin.Context) {
+	id := ctx.Param("categoryId")
+
+	categoryId, err := strconv.Atoi(id)
+	if err != nil {
+		errBindJson := errs.NewBadRequest("Error occurred because id not found")
+		ctx.JSON(errBindJson.Status(), errBindJson)
+		return
+	}
+
+	var updateCategory dto.NewCategoryRequest
+	if err := ctx.ShouldBindJSON(&updateCategory); err != nil {
+		errBindJson := errs.NewUnproccesibleEntity("Error occurred because request body is invalid")
+		ctx.JSON(errBindJson.Status(), errBindJson)
+		return
+	}
+
+	todo, err := c.categoryService.UpdateCategoryById(uint(categoryId), &updateCategory)
+	if err != nil {
+		errBindJson := errs.NewBadRequest("Error occurred because request body is invalid")
+		ctx.JSON(errBindJson.Status(), errBindJson)
+		return
+	}
+
+	ctx.JSON(todo.Status, todo)
 }
