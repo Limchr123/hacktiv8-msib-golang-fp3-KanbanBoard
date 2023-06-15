@@ -104,6 +104,19 @@ func (u *userService) UpdateUserData(id uint, payload *dto.UpdateRequest) (*dto.
 	return response, nil
 }
 
+func (u *userService) DeleteUser(id uint) (*dto.DeleteUserResponse, errs.MessageErr) {
+	if err := u.userRepo.DeleteUserById(id); err != nil {
+		return nil, errs.NewInternalServerError("Error occurred while trying to delete data")
+	}
+
+	response := &dto.DeleteUserResponse{
+		Status:  http.StatusOK,
+		Message: "Your account has been successfully deleted",
+	}
+
+	return response, nil
+}
+
 func (u *userService) UserAuthorization() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		user := ctx.MustGet("userData").(entity.User)

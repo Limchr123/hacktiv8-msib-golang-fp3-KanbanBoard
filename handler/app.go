@@ -31,6 +31,7 @@ func StartApp() {
 	{
 		userRoute.Use(userService.UserAuthentication())
 		userRoute.POST("/update-account", userService.UserAuthorization(), userHandler.UpdateUserData)
+		userRoute.DELETE("/delete-account", userService.UserAuthentication(), userHandler.DeleteUserData)
 	}
 
 	categoryRoute := r.Group("/categories")

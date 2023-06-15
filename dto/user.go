@@ -50,3 +50,8 @@ type UpdateUserResponse struct {
 	Status int        `json:"status"`
 	Data   UpdateUser `json:"data"`
 }
+
+type DeleteUserResponse struct {
+	Status  int    `json:"status"`
+	Message string `json:"message"`
+}

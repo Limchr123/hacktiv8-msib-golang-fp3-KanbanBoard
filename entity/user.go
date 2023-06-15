@@ -3,20 +3,40 @@ package entity
 import (
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 	"kanban_board/pkg/errs"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 )
 
 type User struct {
-	ID        uint      `json:"id"`
-	FullName  string    `json:"full_name"`
-	Email     string    `json:"email"`
-	Password  string    `json:"password"`
-	Role      string    `json:"role"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
+	ID        uint      `gorm:"primaryKey"`
+	FullName  string    `gorm:"column:full_name;not null"`
+	Email     string    `gorm:"column:email;uniqueIndex;not null"`
+	Password  string    `gorm:"column:password;not null"`
+	Role      string    `gorm:"column:role;not null"`
+	CreatedAt time.Time `gorm:"column:created_at"`
+	UpdatedAt time.Time `gorm:"column:updated_at"`
+	Tasks     []Task    `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+
+func (u *User) BeforeSave(tx *gorm.DB) error {
+	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$`)
+	if !emailRegex.MatchString(u.Email) {
+		return errs.NewInternalServerError("Error occurred because invalid email format")
+	}
+
+	if len(strings.TrimSpace(u.Password)) < 6 {
+		return errs.NewInternalServerError("Error occurred because password must 6 letters")
+	}
+
+	if u.Role != "admin" && u.Role != "member" {
+		return errs.NewInternalServerError("Error occurred because role is unidentified")
+	}
+
+	return nil
 }
 
 func (u *User) parseToken(tokenString string) (*jwt.Token, errs.MessageErr) {

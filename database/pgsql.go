@@ -40,6 +40,7 @@ func init() {
 	if err := db.AutoMigrate(&entity.User{}, &entity.Category{}, &entity.Task{}); err != nil {
 		log.Panic("Error occurred while trying to perform database migrations:", err)
 	}
+
 }
 
 func GetDataBaseInstance() *gorm.DB {

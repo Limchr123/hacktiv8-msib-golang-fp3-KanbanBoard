@@ -73,3 +73,16 @@ func (u *userHandler) UpdateUserData(ctx *gin.Context) {
 
 	ctx.JSON(result.Status, result)
 }
+
+func (u *userHandler) DeleteUserData(ctx *gin.Context) {
+	user := ctx.MustGet("userData").(entity.User)
+
+	result, err := u.userService.DeleteUser(user.ID)
+	if err != nil {
+		errBindJson := errs.NewBadRequest("Error occurred because request body is invalid")
+		ctx.JSON(errBindJson.Status(), errBindJson)
+		return
+	}
+
+	ctx.JSON(result.Status, result)
+}

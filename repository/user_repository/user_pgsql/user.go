@@ -53,3 +53,16 @@ func (u *userPg) UpdateUserById(id uint, userPayload *entity.User) (*entity.User
 
 	return user, nil
 }
+
+func (u *userPg) DeleteUserById(id uint) errs.MessageErr {
+	user, err := u.GetUserById(id)
+	if err != nil {
+		return errs.NewInternalServerError("Error occurred while trying to find data")
+	}
+
+	if err := u.db.Delete(user).Error; err != nil {
+		return errs.NewInternalServerError("Error occurred while trying to delete data")
+	}
+
+	return nil
+}
