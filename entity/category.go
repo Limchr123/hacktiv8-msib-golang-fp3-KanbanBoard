@@ -1,8 +1,10 @@
 package entity
 
-import "gorm.io/gorm"
+import "time"
 
 type Category struct {
-	gorm.Model
-	Type string
+	ID        uint      `json:"id"`
+	Type      string    `json:"type"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

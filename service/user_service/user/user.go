@@ -124,6 +124,26 @@ func (u *userService) UserAuthorization() gin.HandlerFunc {
 	}
 }
 
+func (u *userService) CategoryAuthorization() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		user := ctx.MustGet("userData").(entity.User)
+
+		account, err := u.userRepo.GetUserById(user.ID)
+		if err != nil {
+			ctx.AbortWithStatusJSON(err.Status(), err)
+			return
+		}
+
+		if account.Role != "admin" {
+			errAuthorized := errs.NewUnauthorizedError("You are not authorized to edit data")
+			ctx.AbortWithStatusJSON(errAuthorized.Status(), errAuthorized)
+			return
+		}
+
+		ctx.Next()
+	}
+}
+
 func (u *userService) UserAuthentication() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		bearerToken := ctx.GetHeader("Authorization")
