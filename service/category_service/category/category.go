@@ -44,6 +44,45 @@ func (c *categoryService) CreateNewCategory(payload *dto.NewCategoryRequest) (*d
 	return response, nil
 }
 
+func (c *categoryService) GetAllTaskByCategories() (*dto.GetAllTaskByCategoriesResponse, errs.MessageErr) {
+	allCategories, err := c.categoryRepo.GetTaskByCategories()
+	if err != nil {
+		return nil, errs.NewNotFound("Error occurred while trying to get data")
+	}
+
+	categories := []dto.Category{}
+	for _, eachCategory := range allCategories {
+		tasks := []dto.Task{}
+		for _, eachTask := range eachCategory.Tasks {
+			task := dto.Task{
+				ID:          eachTask.ID,
+				Title:       eachTask.Title,
+				Description: eachTask.Description,
+				UserID:      eachTask.UserID,
+				CategoryID:  eachTask.CategoryID,
+				CreatedAt:   eachTask.CreatedAt,
+				UpdatedAt:   eachTask.UpdatedAt,
+			}
+			tasks = append(tasks, task)
+		}
+		category := dto.Category{
+			ID:        eachCategory.ID,
+			Type:      eachCategory.Type,
+			UpdatedAt: eachCategory.UpdatedAt,
+			CreatedAt: eachCategory.CreatedAt,
+			Task:      tasks,
+		}
+		categories = append(categories, category)
+	}
+
+	response := &dto.GetAllTaskByCategoriesResponse{
+		Status: http.StatusOK,
+		Data:   categories,
+	}
+
+	return response, nil
+}
+
 func (c *categoryService) UpdateCategoryById(id uint, payload *dto.NewCategoryRequest) (*dto.UpdateCategoryResponse, errs.MessageErr) {
 	if err := helpers.ValidateStruct(payload); err != nil {
 		return nil, errs.NewUnproccesibleEntity("Error occurred while trying to validate request")
@@ -76,8 +115,8 @@ func (c *categoryService) DeleteCategoryById(id uint) (*dto.DeleteCategoryRespon
 	}
 
 	response := &dto.DeleteCategoryResponse{
-		Status:  http.StatusOK,
-		Message: "Category has been successfully deleted",
+		Status: http.StatusOK,
+		Data:   dto.DeleteCategory{Message: "Category has been successfully deleted"},
 	}
 
 	return response, nil

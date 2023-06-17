@@ -18,15 +18,15 @@ func NewUserHandler(userService user_service.UserService) user_handler.UserHandl
 }
 
 func (u *userHandler) CreateNewUser(ctx *gin.Context) {
-	var newUser dto.NewUserRequest
+	var newUserRequest dto.NewUserRequest
 
-	if err := ctx.ShouldBindJSON(&newUser); err != nil {
+	if err := ctx.ShouldBindJSON(&newUserRequest); err != nil {
 		errBindJson := errs.NewUnproccesibleEntity("Error occurred because request body is invalid")
 		ctx.JSON(errBindJson.Status(), errBindJson)
 		return
 	}
 
-	result, err := u.userService.CreateNewUser(&newUser)
+	result, err := u.userService.CreateNewUser(&newUserRequest)
 	if err != nil {
 		errBindJson := errs.NewBadRequest("Error occurred because request body is invalid")
 		ctx.JSON(errBindJson.Status(), errBindJson)

@@ -24,6 +24,7 @@ func (t *Task) BeforeCreate(tx *gorm.DB) error {
 	if err := tx.Model(&Category{}).Where("id = ?", t.CategoryID).Count(&count).Error; err != nil {
 		return err
 	}
+
 	if count == 0 {
 		return errs.NewInternalServerError("Category not found")
 	}

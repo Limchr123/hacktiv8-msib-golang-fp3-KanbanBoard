@@ -110,8 +110,8 @@ func (u *userService) DeleteUser(id uint) (*dto.DeleteUserResponse, errs.Message
 	}
 
 	response := &dto.DeleteUserResponse{
-		Status:  http.StatusOK,
-		Message: "Your account has been successfully deleted",
+		Status: http.StatusOK,
+		Data:   dto.DeleteUser{Message: "Your account has been successfully deleted"},
 	}
 
 	return response, nil
@@ -137,7 +137,7 @@ func (u *userService) UserAuthorization() gin.HandlerFunc {
 	}
 }
 
-func (u *userService) CategoryAuthorization() gin.HandlerFunc {
+func (u *userService) AdminAuthorization() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		user := ctx.MustGet("userData").(entity.User)
 

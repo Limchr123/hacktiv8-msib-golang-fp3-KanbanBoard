@@ -36,6 +36,17 @@ func (c *categoryHandler) CreateNewCategory(ctx *gin.Context) {
 	ctx.JSON(result.Status, result)
 }
 
+func (c *categoryHandler) GetAllTaskByCategory(ctx *gin.Context) {
+	result, err := c.categoryService.GetAllTaskByCategories()
+	if err != nil {
+		errBindJson := errs.NewBadRequest("Error occurred because request body is invalid")
+		ctx.JSON(errBindJson.Status(), errBindJson)
+		return
+	}
+
+	ctx.JSON(result.Status, result)
+}
+
 func (c *categoryHandler) UpdateCategoryById(ctx *gin.Context) {
 	id := ctx.Param("categoryId")
 

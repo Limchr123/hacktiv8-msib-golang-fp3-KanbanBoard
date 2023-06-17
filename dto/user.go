@@ -2,6 +2,8 @@ package dto
 
 import "time"
 
+//Request
+
 type NewUserRequest struct {
 	FullName string `json:"full_name" valid:"required~full_name cannot be empty"`
 	Email    string `json:"email" valid:"required~email cannot be empty"`
@@ -18,6 +20,8 @@ type UpdateRequest struct {
 	Email    string `json:"email"`
 }
 
+//Data
+
 type NewUser struct {
 	ID        uint      `json:"id"`
 	FullName  string    `json:"full_name"`
@@ -31,6 +35,18 @@ type UpdateUser struct {
 	Email     string    `json:"email"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+type User struct {
+	ID       uint   `json:"id"`
+	Email    string `json:"email"`
+	FullName string `json:"full_name"`
+}
+
+type DeleteUser struct {
+	Message string `json:"message"`
+}
+
+//Response
 
 type TokenResponse struct {
 	Token string `json:"token"`
@@ -52,6 +68,6 @@ type UpdateUserResponse struct {
 }
 
 type DeleteUserResponse struct {
-	Status  int    `json:"status"`
-	Message string `json:"message"`
+	Status int        `json:"status"`
+	Data   DeleteUser `json:"data"`
 }

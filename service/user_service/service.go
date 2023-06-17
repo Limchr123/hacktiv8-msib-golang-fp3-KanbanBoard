@@ -12,6 +12,6 @@ type UserService interface {
 	UpdateUserData(id uint, payload *dto.UpdateRequest) (*dto.UpdateUserResponse, errs.MessageErr)
 	DeleteUser(id uint) (*dto.DeleteUserResponse, errs.MessageErr)
 	UserAuthorization() gin.HandlerFunc
-	CategoryAuthorization() gin.HandlerFunc
+	AdminAuthorization() gin.HandlerFunc
 	UserAuthentication() gin.HandlerFunc
 }

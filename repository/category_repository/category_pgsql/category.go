@@ -59,6 +59,12 @@ func (c *categoryPg) DeleteCategoryById(id uint) errs.MessageErr {
 	return nil
 }
 
-func (c *categoryPg) GetTaskByCategories(id uint) (*entity.Category, errs.MessageErr) {
+func (c *categoryPg) GetTaskByCategories() ([]entity.Category, errs.MessageErr) {
+	var category []entity.Category
 
+	if err := c.db.Preload("Tasks").Find(&category).Error; err != nil {
+		return nil, errs.NewInternalServerError("Error occurred while trying to get data")
+	}
+
+	return category, nil
 }
