@@ -22,7 +22,7 @@ type User struct {
 	Tasks     []Task    `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
-func (u *User) BeforeSave(tx *gorm.DB) error {
+func (u *User) BeforeCreate(tx *gorm.DB) error {
 	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$`)
 	if !emailRegex.MatchString(u.Email) {
 		return errs.NewInternalServerError("Error occurred because invalid email format")
@@ -67,6 +67,12 @@ func (u *User) bindTokenToUserEntity(claim jwt.MapClaims) errs.MessageErr {
 		u.Email = email
 	}
 
+	if role, ok := claim["role"].(string); !ok {
+		return errs.NewUnauthorizedError("Error occurred")
+	} else {
+		u.Role = role
+	}
+
 	return nil
 }
 
@@ -108,6 +114,7 @@ func (u *User) tokenClaim() jwt.MapClaims {
 	return jwt.MapClaims{
 		"id":      u.ID,
 		"email":   u.Email,
+		"role":    u.Role,
 		"expired": time.Now().Add(time.Hour * 2).Unix(),
 	}
 }
