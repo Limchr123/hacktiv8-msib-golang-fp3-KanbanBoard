@@ -6,4 +6,4 @@ Anggota Kelompok
 - Julio Chaya Prayoga
 - Liem Charlie
 
-Link Deployment :
+Link Deployment : fp3-kanbanboard-kelompok6-production.up.railway.app
