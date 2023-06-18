@@ -12,9 +12,11 @@ import (
 	"kanban_board/service/category_service/category"
 	"kanban_board/service/task_service/task"
 	"kanban_board/service/user_service/user"
+	"os"
 )
 
 func StartApp() {
+	var port = os.Getenv("PORT")
 	db := database.GetDataBaseInstance()
 
 	userRepo := user_pgsql.NewUserPG(db)
@@ -61,5 +63,5 @@ func StartApp() {
 		taskRoute.DELETE("/:taskId", userService.UserAuthorization(), taskHandler.DeleteTaskById)
 	}
 
-	r.Run(":8080")
+	r.Run(":" + port)
 }
