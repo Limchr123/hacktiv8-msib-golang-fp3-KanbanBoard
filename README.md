@@ -1,4 +1,4 @@
-## _Final Project 3_
+## _Final Project 3 KanbanBoard_
 
 Anggota Kelompok
 
@@ -7,3 +7,4 @@ Anggota Kelompok
 - Liem Charlie
 
 Link Deployment :
+http://fp3-kanbanboard-kelompok6-production.up.railway.app/
